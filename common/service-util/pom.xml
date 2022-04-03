@@ -17,11 +17,11 @@
     </properties>
 
     <dependencies>
-        <dependency>
+   <!--     <dependency>
             <groupId>com.atguigu.yygh</groupId>
             <artifactId>common-util</artifactId>
             <version>1.0</version>
-        </dependency>
+        </dependency>-->
         <!-- redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

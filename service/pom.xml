@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>service_user</module>
+        <module>service_hosp</module>
     </modules>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -20,16 +21,16 @@
     </properties>
 
     <dependencies>
-  <!--      <dependency>
-            <groupId>com.atguigu.yygh</groupId>
+        <dependency>
+            <groupId>com.hotax</groupId>
             <artifactId>service-util</artifactId>
-            <version>1.0</version>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.atguigu.yygh</groupId>
+            <groupId>com.hotax</groupId>
             <artifactId>model</artifactId>
-            <version>1.0</version>
-        </dependency>-->
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <!--web-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -52,20 +53,20 @@
             <optional>true</optional>
         </dependency>
         <!-- 服务调用feign -->
-        <dependency>
+      <!--  <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
+        </dependency>-->
         <!-- 服务注册 -->
-        <dependency>
+  <!--      <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
+        </dependency>-->
         <!-- 流量控制 -->
-        <dependency>
+     <!--   <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
-        </dependency>
+        </dependency>-->
     </dependencies>
     <build>
         <plugins>
