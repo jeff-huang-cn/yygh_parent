@@ -25,6 +25,7 @@ import java.util.Random;
 @Api(tags = "醫院設置管理")
 @RestController
 @RequestMapping("/admin/hosp/hospitalSet")
+@CrossOrigin()
 public class HospitalSetController {
     @Autowired
     private HospitalSetService hospitalSetService;
@@ -52,14 +53,16 @@ public class HospitalSetController {
     }
 
     @ApiOperation("分页查询医院信息")
-    @GetMapping("findPageHospSet/{current}/{limit}")
-    public Result findPageHospSet(@PathVariable long current, @PathVariable long limit, HospitalQueryVo hospitalQueryVo){
+    @PostMapping("findPageHospSet/{current}/{limit}")
+    public Result findPageHospSet(@PathVariable long current,
+                                  @PathVariable long limit,
+                                  @RequestBody(required = false) HospitalQueryVo hospitalQueryVo){
         Page<HospitalSet> page = new Page<>(current, limit);
         QueryWrapper<HospitalSet> wrapper = new QueryWrapper<>();
-        if(StringUtils.isEmpty(hospitalQueryVo.getHosname())){
+        if(!StringUtils.isEmpty(hospitalQueryVo.getHosname())){
             wrapper.like("hosname", hospitalQueryVo.getHosname());
         }
-        if(StringUtils.isEmpty(hospitalQueryVo.getHoscode())){
+        if(!StringUtils.isEmpty(hospitalQueryVo.getHoscode())){
             wrapper.like("hoscode", hospitalQueryVo.getHoscode());
         }
         Page<HospitalSet> list = hospitalSetService.page(page, wrapper);
