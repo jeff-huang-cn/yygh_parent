@@ -1,7 +1,7 @@
 //package com.hotax.yygh.common.gateway;
 //
 //import com.alibaba.fastjson.JSONObject;
-//import com.atguigu.yygh.common.helper.JwtHelper;
+//import com.hotax.yygh.common.helper.JwtHelper;
 //import com.hotax.yygh.common.result.Result;
 //import com.hotax.yygh.common.result.ResultCodeEnum;
 //import org.springframework.cloud.gateway.filter.GatewayFilterChain;

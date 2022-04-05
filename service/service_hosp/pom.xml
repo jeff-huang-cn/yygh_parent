@@ -10,17 +10,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>service_hosp</artifactId>
-    <packaging>jar</packaging>
-    <name>service-hosp</name>
-    <description>service-hosp</description>
+<!--    <packaging>jar</packaging>-->
+<!--    <name>service-hosp</name>-->
+<!--    <description>service-hosp</description>-->
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
-
-
-
     <dependencies>
         <dependency>
             <groupId>com.hotax</groupId>
@@ -31,6 +28,10 @@
             <groupId>com.hotax</groupId>
             <artifactId>model</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
         </dependency>
     </dependencies>
 
