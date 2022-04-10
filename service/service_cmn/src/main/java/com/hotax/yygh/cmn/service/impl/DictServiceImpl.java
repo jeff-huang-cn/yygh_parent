@@ -76,10 +76,14 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     public void importDictData(MultipartFile file) {
         try {
             EasyExcel.read(file.getInputStream(), DictEeVo.class, new DictListener(dictMapper)).sheet().doRead();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getDictName(String dictCode, String value) {
+        return null;
     }
 
     //判断id下面是否有子节点

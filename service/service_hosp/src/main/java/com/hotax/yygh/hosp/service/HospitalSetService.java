@@ -8,4 +8,5 @@ import yygh.model.hosp.HospitalSet;
  * @description:
  **/
 public interface HospitalSetService extends IService<HospitalSet>  {
+    String getSignKey(String hoscode);
 }

@@ -3,9 +3,13 @@ package com.hotax.yygh.hosp.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hotax.yygh.hosp.repository.HospitalRepository;
 import com.hotax.yygh.hosp.service.HospitalService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import yygh.model.hosp.Hospital;
+import yygh.vo.hosp.HospitalQueryVo;
+import yygh.vo.hosp.HospitalSetQueryVo;
 
 import java.util.Date;
 import java.util.Map;
@@ -36,5 +40,24 @@ public class HospitalServiceImpl implements HospitalService {
         hospital.setUpdateTime(new Date());
         hospital.setIsDeleted(0);
         hospitalRepository.save(hospital);
+    }
+
+    @Override
+    public Hospital getByHoscode(String hoscode) {
+        Hospital targetHospital = hospitalRepository.getHospitalByHoscode(hoscode);
+        return targetHospital;
+    }
+
+    @Override
+    public Page<Hospital> selectHospPage(Integer page, Integer limit, HospitalQueryVo hospitalQueryVo) {
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                                .withIgnoreCase(true);
+        Hospital hospital = new Hospital();
+        BeanUtils.copyProperties(hospitalQueryVo, hospital);
+        Example<Hospital> example = Example.of(hospital, matcher);
+        Page<Hospital> pagedList = hospitalRepository.findAll(example, pageable);
+        return pagedList;
     }
 }
