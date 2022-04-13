@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import yygh.model.cmn.Dict;
 import yygh.vo.cmn.DictEeVo;
@@ -83,7 +84,34 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
 
     @Override
     public String getDictName(String dictCode, String value) {
-        return null;
+        if(StringUtils.isEmpty(dictCode) && StringUtils.isEmpty(value)) {
+            return null;
+        }
+        QueryWrapper<Dict> wrapper = new QueryWrapper<>();
+        wrapper.eq("value", value);
+        if(StringUtils.isEmpty(dictCode)) {
+            Dict dict = dictMapper.selectOne(wrapper);
+            return dict.getName();
+        }
+        Dict codeDict = getDictByDictCode(dictCode);
+        Long parent_id = codeDict.getId();
+        Dict dict  = baseMapper.selectOne(new QueryWrapper<Dict>().eq("parent_id", parent_id).eq("value", value));
+
+        return dict.getName();
+    }
+
+    @Override
+    public List<Dict> findByDictCode(String dictCode) {
+        Dict codeDict = this.getDictByDictCode(dictCode);
+        if(null == codeDict) return null;
+        return this.findChlidData(codeDict.getId());
+    }
+
+    private Dict getDictByDictCode(String dictCode) {
+        QueryWrapper<Dict> wrapper = new QueryWrapper<>();
+        wrapper.eq("dict_code", dictCode);
+        Dict dict = dictMapper.selectOne(wrapper);
+        return dict;
     }
 
     //判断id下面是否有子节点

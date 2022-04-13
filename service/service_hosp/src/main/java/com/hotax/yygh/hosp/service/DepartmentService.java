@@ -3,7 +3,9 @@ package com.hotax.yygh.hosp.service;
 import org.springframework.data.domain.Page;
 import yygh.model.hosp.Department;
 import yygh.vo.hosp.DepartmentQueryVo;
+import yygh.vo.hosp.DepartmentVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,4 +18,8 @@ public interface DepartmentService {
     Page<Department> findPageDepartment(Integer page, Integer limit, DepartmentQueryVo departmentQueryVo);
 
     void remove(String hoscode, String depcode);
+
+    List<DepartmentVo> findDeptTree(String hoscode);
+
+    Object getDepName(String hoscode, String depcode);
 }

@@ -1,6 +1,7 @@
 package com.hotax.yygh.hosp.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hotax.yygh.cmn.client.DictFeignClient;
 import com.hotax.yygh.hosp.repository.HospitalRepository;
 import com.hotax.yygh.hosp.service.HospitalService;
 import org.springframework.beans.BeanUtils;
@@ -12,6 +13,8 @@ import yygh.vo.hosp.HospitalQueryVo;
 import yygh.vo.hosp.HospitalSetQueryVo;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,6 +25,9 @@ import java.util.Map;
 public class HospitalServiceImpl implements HospitalService {
     @Autowired
     private HospitalRepository hospitalRepository;
+
+    @Autowired
+    private DictFeignClient dictFeignClient;
 
     @Override
     public void save(Map<String, Object> paramMap) {
@@ -58,6 +64,66 @@ public class HospitalServiceImpl implements HospitalService {
         BeanUtils.copyProperties(hospitalQueryVo, hospital);
         Example<Hospital> example = Example.of(hospital, matcher);
         Page<Hospital> pagedList = hospitalRepository.findAll(example, pageable);
+
+        pagedList.getContent().stream().forEach(item -> {
+            this.setHospitalHosType(item);
+        });
         return pagedList;
+    }
+
+    @Override
+    public void updateStatus(String id, Integer status) {
+        if(status.intValue() != 0 && status.intValue() != 1) {
+            return;
+        }
+        Hospital hospital = hospitalRepository.findById(id).get();
+        hospital.setStatus(status);
+        hospital.setUpdateTime(new Date());
+        hospitalRepository.save(hospital);
+    }
+
+    @Override
+    public Map<String, Object> show(String id) {
+        Map<String, Object> result = new HashMap<>();
+        Hospital hospital = this.setHospitalHosType(hospitalRepository.findById(id).get());
+        result.put("hospital", hospital);
+        result.put("bookingRule", hospital.getBookingRule());
+        hospital.setBookingRule(null);
+        return result;
+    }
+
+    /**
+     * 根据医院编号获取医院名称接口
+     *
+     * @param hoscode
+     * @return
+     */
+    @Override
+    public String getHospName(String hoscode) {
+        Hospital hospital = hospitalRepository.getHospitalByHoscode(hoscode);
+        if(null != hospital) {
+            return hospital.getHosname();
+        }
+        return "";
+    }
+
+    @Override
+    public List<Hospital> findByHosname(String hosname) {
+        return hospitalRepository.findHospitalByHosnameLike(hosname);
+    }
+
+    private Hospital setHospitalHosType(Hospital hospital) {
+        if(null == hospital) {
+            return hospital;
+        }
+        String hostype = dictFeignClient.getName("hostype", hospital.getHostype());
+        hospital.getParam().put("hostypeString", hostype);
+
+        String provinceName = dictFeignClient.getName("", hospital.getProvinceCode());
+        String cityName = dictFeignClient.getName("", hospital.getCityCode());
+        String districtName = dictFeignClient.getName("", hospital.getDistrictCode());
+        hospital.getParam().put("fullAddress", provinceName + cityName + districtName);
+
+        return hospital;
     }
 }

@@ -6,6 +6,8 @@
         <module>common</module>
         <module>Model</module>
         <module>service</module>
+        <module>service_client</module>
+        <module>service_geteway</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
