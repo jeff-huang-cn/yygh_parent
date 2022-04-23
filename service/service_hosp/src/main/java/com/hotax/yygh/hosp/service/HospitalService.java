@@ -31,4 +31,9 @@ public interface HospitalService {
     String getHospName(String hoscode);
 
     List<Hospital> findByHosname(String hosname);
+
+    /**
+     * 医院预约挂号详情
+     */
+    Map<String, Object> item(String hoscode);
 }

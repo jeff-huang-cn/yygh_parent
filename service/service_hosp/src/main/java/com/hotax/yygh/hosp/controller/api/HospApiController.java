@@ -1,6 +1,7 @@
 package com.hotax.yygh.hosp.controller.api;
 
 import com.hotax.yygh.common.result.Result;
+import com.hotax.yygh.hosp.service.DepartmentService;
 import com.hotax.yygh.hosp.service.HospitalService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -20,13 +21,16 @@ import java.util.List;
  * @description:
  **/
 @RestController
-@RequestMapping("/api/hsop/hospital")
+@RequestMapping("/api/hosp/hospital")
 public class HospApiController {
     @Autowired
     private HospitalService hospitalService;
 
+    @Autowired
+    private DepartmentService departmentService;
+
     @ApiOperation(value = "获取分页列表")
-    @GetMapping("{page}/{limit}")
+    @GetMapping("findHospList/{page}/{limit}")
     public Result index(
             @PathVariable Integer page,
             @PathVariable Integer limit,
@@ -37,7 +41,7 @@ public class HospApiController {
         return Result.ok(pageModel);
     }
 
-    @ApiOperation(value = "根据医院名称获取医院列表")
+    @ApiOperation(value = "根据医院名称")
     @GetMapping("findByHosname/{hosname}")
     public Result findByHosname(
             @ApiParam(name = "hosname", value = "医院名称", required = true)
@@ -45,4 +49,21 @@ public class HospApiController {
         List<Hospital> list = hospitalService.findByHosname(hosname);
         return Result.ok(list);
     }
+
+    @ApiOperation(value = "获取科室列表")
+    @GetMapping("department/{hoscode}")
+    public Result index(
+            @ApiParam(name = "hoscode", value = "医院code", required = true)
+            @PathVariable String hoscode) {
+        return Result.ok(departmentService.findDeptTree(hoscode));
+    }
+
+    @ApiOperation(value = "医院预约挂号详情")
+    @GetMapping("findHospDetail/{hoscode}")
+    public Result item(
+            @ApiParam(name = "hoscode", value = "医院code", required = true)
+            @PathVariable String hoscode) {
+        return Result.ok(hospitalService.item(hoscode));
+    }
+
 }
