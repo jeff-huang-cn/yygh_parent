@@ -7,7 +7,7 @@
         <span
           class="v-link selected dark"
           :onclick="
-            'javascript:window.location=\'/hospital/' + hospital.hoscode + '\''
+            'javascript:window.location=\'/hosp/' + hospital.hoscode + '\''
           "
           >预约挂号
         </span>
@@ -16,7 +16,7 @@
         <span
           class="v-link clickable dark"
           :onclick="
-            'javascript:window.location=\'/hospital/detail/' +
+            'javascript:window.location=\'/hosp/detail/' +
             hospital.hoscode +
             '\''
           "
@@ -28,7 +28,7 @@
         <span
           class="v-link clickable dark"
           :onclick="
-            'javascript:window.location=\'/hospital/notice/' +
+            'javascript:window.location=\'/hosp/notice/' +
             hospital.hoscode +
             '\''
           "
@@ -165,6 +165,7 @@
 <script>
 import "~/assets/css/hospital_personal.css";
 import "~/assets/css/hospital.css";
+import cookie from "js-cookie";
 
 import hospitalApi from "@/api/hosp";
 
@@ -185,7 +186,6 @@ export default {
     this.hoscode = this.$route.params.hoscode;
     this.init();
   },
-
   methods: {
     init() {
       hospitalApi.show(this.hoscode).then((response) => {
@@ -204,8 +204,20 @@ export default {
     },
 
     schedule(depcode) {
+      debugger;
+      // 登录判断
+      let token = cookie.get("token");
+      if (!token) {
+        loginEvent.$emit("loginDialogEvent");
+        return;
+      }
       window.location.href =
-        "/hospital/schedule?hoscode=" + this.hoscode + "&depcode=" + depcode;
+        "/hospital/schedule?hoscode=" +
+        this.hospital.hoscode +
+        "&depcode=" +
+        depcode;
+      // window.location.href =
+      //   "/hospital/schedule?hoscode=" + this.hoscode + "&depcode=" + depcode;
     },
   },
 };
