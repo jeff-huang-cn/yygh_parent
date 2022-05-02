@@ -34,10 +34,10 @@ public class MsmApiController {
             return Result.ok();
         }
 
-        code = RandomUtil.getSixBitRandom();
-        boolean isSend = msmService.send(phone, code);
+        code = "123456";//RandomUtil.getSixBitRandom();
+        boolean isSend = true;//msmService.send(phone, code);
         if(isSend == Boolean.TRUE) {
-            redisTemplate.opsForValue().set(phone, code, 2, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(phone, code, 5, TimeUnit.MINUTES);
             return Result.ok();
         }
         return  Result.fail("发送短信失败");

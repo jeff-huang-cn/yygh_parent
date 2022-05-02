@@ -6,6 +6,7 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.OSSException;
 import com.hotax.yygh.oss.service.FileService;
 import com.hotax.yygh.oss.utils.ConstantOssPropertiesUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +15,7 @@ import javax.validation.Valid;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 /**
  * @author: Jeff 2022-05-02 18:11
@@ -37,10 +39,17 @@ public class FileServiceImpl implements FileService {
 
         try {
             InputStream inputStream = file.getInputStream();
-            String objectName = file.getOriginalFilename();
+            String filename = file.getOriginalFilename();
+            // 生成唯一唯一值，使用UUID，添加到文件名称里面
+            String uuid = UUID.randomUUID().toString().replaceAll("-","");
+            filename = uuid + filename;
+            // 按照当前的日期创建文件夹，上传到创建文件里面
+            String date = new DateTime().toString("yyyy/MM/dd");
+            filename = date + "/" + filename;
+
             // 创建PutObject请求。
-            ossClient.putObject(bucketName, objectName, inputStream);
-            return "https://" + bucketName + "." + endpoint + "/" + objectName;
+            ossClient.putObject(bucketName, filename, inputStream);
+            return "https://" + bucketName + "." + endpoint + "/" + filename;
         } catch (OSSException oe) {
             System.out.println("Caught an OSSException, which means your request made it to OSS, "
                     + "but was rejected with an error response for some reason.");

@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import yygh.enums.AuthStatusEnum;
 import yygh.model.user.UserInfo;
 import yygh.vo.user.LoginVo;
+import yygh.vo.user.UserAuthVo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -100,6 +102,20 @@ public class UserInfoServiceImpl extends
         queryWrapper.eq("openid", openId);
         UserInfo userInfo = baseMapper.selectOne(queryWrapper);
         return userInfo;
+    }
+
+    @Override
+    public void userAuth(Long userId, UserAuthVo userAuthVo) {
+        // 根据用户id查询用户信息
+        UserInfo userInfo = baseMapper.selectById(userId);
+        // 设置认证信息
+        userInfo.setName(userAuthVo.getName());
+        userInfo.setCertificatesType(userAuthVo.getCertificatesType());
+        userInfo.setCertificatesNo(userAuthVo.getCertificatesNo());
+        userInfo.setCertificatesUrl(userAuthVo.getCertificatesUrl());
+        userInfo.setAuthStatus(AuthStatusEnum.AUTH_RUN.getStatus());
+        // 进行信息更新
+        baseMapper.updateById(userInfo);
     }
 }
 
